@@ -8,51 +8,41 @@
 #include <cassert>
 #include <algorithm>
 #include <vector>
-
+#include <cstdlib>
 using namespace std;
 
 static const char a_car[] = "0123456789!@#$%^&*abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-static const char car[] = "*&^%$#@!";
-static const char alpha[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-static const char num[] = "0123456789";
-
-char RNG() {
-    int stringLength = sizeof(a_car) -1;
-    return a_car[rand() % stringLength];
-}
+string car = "*&^%$#@!";
+string alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+string num = "0123456789";
 
 
 int main() {
 srand(time(0));
 int man_allow = 1000;
-char ranCar = RNG();
-
+//string word;
 while (true) {
-
+string word;
 cout << "Your current points " << man_allow << ", just type -> ";
 
+for (int i = 0; i<7; ++i) word += a_car[rand() % 70];
 
 
-for (int a = 1; a<=8;++a) {
-for (int i= 0;i<sizeof(a_car)-1;++i) {
-  char ranCar = RNG();
-  if (ranCar  == num[i]) {
-    cout << "[0-9]";
-    break;
+for (int i = 0;i<word.length(); i++) {
+  //char inWord = word;
+  if (isdigit(word[i])) {
+   cout << "[0-9]";
   }
-  else if (ranCar  == alpha[i]) {
-    cout << ranCar;
-    break;
-  }
-  else if (ranCar == car[i]) {
-    cout << "[%-&]";
-    break;
+  else if (isalpha(word[i])) {
+   cout << word[i];
   }
   else {
-    continue;
+   cout << "[%-&]";
+   continue;
   }
- }
 }
+
+
 
 cout <<  ": ";
 
@@ -63,37 +53,36 @@ cin >> usr_input;
 chrono::steady_clock::time_point end= chrono::steady_clock::now();
 int inSpeed = chrono::duration_cast<chrono::milliseconds>(end - begin).count();
 
-char ranCar_collect[7];
-for (int i = 0; i < 7; ++i) {
-ranCar_collect[i] = ranCar;
-break;
-}
-
 
 
 if (inSpeed >= 7000) {
   man_allow -= (inSpeed - 7000);
-  cout << inSpeed << " milliseconds, you *failed* it within the interval of 7000..."
-    << endl << "String offset is ";
-    
-for (int i =  0;i<sizeof(usr_input);++i) {
-    int offset = ranCar_collect[i] - usr_input[i];
-    cout <<  offset;
-    break;
+  cout << inSpeed << " milliseconds, you *failed* it within the interval of 7000...";
+   cout << endl << "String offset is ";
+  
+int offset;
+
+for (int i=0;i<word.length(); ++i) {
+    offset += word[i] - usr_input[i];
 }
-    cout << ", your total penalty is " << (inSpeed - 7000)
+
+  cout << offset <<  ", your total penalty is " << (inSpeed - 7000) + offset
     << "..." << endl << endl;
+  if (man_allow<=0) {
+     cout << endl << endl << "Bye..." << endl;
+     break;
+  }
     continue;
 }
 else if (inSpeed <= 7000) {
   for (int i = 0; i<=7;++i){
     for (int j = 0; i<=7;++j){
-    if (ranCar_collect[i] == usr_input[j]) {
+    if (word[i] == usr_input[j]) {
      man_allow += 500;
      break;
     }
-    else if (ranCar_collect[i] != usr_input[j]) {
-    int offset = ranCar_collect[i] - usr_input[j];
+    else if (word[i] != usr_input[j]) {
+    int offset = word[i] - usr_input[j];
     man_allow -= offset;
     break;
     }
@@ -109,11 +98,6 @@ else if (inSpeed <= 7000) {
 else {
 continue;
 }
-if (man_allow<=0) {
-  cout << "Bye..." << endl;
-  break;
-}
-
 }
 
 }
