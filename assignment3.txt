@@ -1,0 +1,12 @@
+In this game, a player is asked by computer to type in several animal names such as "dog," "cat," etc., in the beginning of the game session. There is no limit to the count of the names but these names must be space delimited. When entering a return key without typing anything (i.e., empty line), this process of input cycle ends. So, use getline()discussed in recent lecture to realize this input logic - the concrete process to tokenize each name can be reproduced from lectured coding demonstration.
+
+The computer will pick up 1 to 3 names from those entered by the player. They are shuffled to produce a random word. The player will be asked to identify the names, given a hint of how many animals in that word. The player needs to type in names (or a name if asked one). Typing "?" will show the name list, and typing "quit" will end the game.
+
+* random number of samples (1-3)
+* Save samples to variable, ideally as a set
+* joins samples into one word
+* shuffles word
+* Get user input
+* Compare user input to set of samples
+
+When succeeding to answer in two consecutive rounds, the computer's challenge becomes harder by striking out a character one by one. The position to strike out is chosen at random. So, succeeding 4 consecutive times, the random word has two strikes out shown by underscore "_" characters. On the other hand, failing to answer in two consecutive rounds, the computer's challenge becomes easier by reducing the count of strikes out.
