@@ -35,24 +35,28 @@ vector<string> pushtoken (string l) { //Fucntion pushes user input to vector str
 //
 // }
 
+void print_animals(vector <string> animals) {
+    for (int i = 0; i < animals.size(); ++i) {
+        cout << i + 1 << ": " << animals[i] << endl;
+    }
+}
+
 int main() {
     srand(time(0));
     vector <string> tokens;
     string usr_input;
     string guess_word;
 
-    bool inputting_animals = true;
     cout << "Enter at least five animal names, e.g., cat, dog, etc..." << endl;
     while (true) {
         cout << "> ";
         getline(cin, usr_input); //Get user input
-        if (usr_input == "") break;
+        if (usr_input == "") break; // QUIT
+
         vector<string> tok = pushtoken(usr_input); //Assign returned user input to local vector
         // TODO assert vector is at least five elements
         tokens.insert(tokens.end(), tok.begin(), tok.end());  //Push returned user input onto stack
-        for (int i = 0; i < tokens.size(); ++i) {  //Copy out user input
-            cout << i + 1 << ": " << tokens[i] << endl;
-        }
+        print_animals(tokens);
 
         random_shuffle(tokens.begin(), tokens.end());
         int num_animals = rand() % 3 + 1; // num_animals in the range 1 to 3
