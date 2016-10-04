@@ -70,14 +70,15 @@ int main() {
         getline(cin, usr_input); //Get user input
         vector<string> tok = pushtoken(usr_input); //Assign returned user input to local vector
         tokens.insert(tokens.end(), tok.begin(), tok.end());  //Push returned user input onto stack
-        assert (tokens.size() >= 5);  //Assert vector is at least five elements
         guess_word = scramble(tokens);
         if (usr_input == "") break;  // QUIT
-        print_animals(tokens);
-
-    }
     
-    cout << guess_word << endl;
+    }
+
+    print_animals(tokens);
+    cout << endl;
+    assert (tokens.size() >= 5);  //Assert vector is at least five elements
+    cout << "What are 2 animals in \"" << guess_word << "\" ? " << endl;
 }
 
 
