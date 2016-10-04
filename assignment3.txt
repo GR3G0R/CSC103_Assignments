@@ -8,5 +8,3 @@ The computer will pick up 1 to 3 names from those entered by the player. They ar
 * shuffles word
 * Get user input
 * Compare user input to set of samples
-
-When succeeding to answer in two consecutive rounds, the computer's challenge becomes harder by striking out a character one by one. The position to strike out is chosen at random. So, succeeding 4 consecutive times, the random word has two strikes out shown by underscore "_" characters. On the other hand, failing to answer in two consecutive rounds, the computer's challenge becomes easier by reducing the count of strikes out.
