@@ -42,11 +42,12 @@ void print_animals(vector <string> animals) {
     }
 }
 
-string scramble (vector <string> capture){  //Generate randomly shuffled string
+string scramble (vector <string> capture,int& num_animals){  //Generate randomly shuffled string
+    srand(time(0));
     string challenge;
     vector <string> challenges;
     random_shuffle(capture.begin(), capture.end());
-    int num_animals = rand() % 3 + 1;  // num_animals in the range 1 to 3
+    num_animals = rand() % 3 + 1;  // num_animals in the range 1 to 3
     for (int i = 0; i < num_animals; i++) challenges.push_back(capture[i]);
     for_each(challenges.begin(), challenges.end(), [&](string &piece){ challenge += piece; });  //Construct string from vector
     random_shuffle(challenge.begin(), challenge.end());  //Scramble string
@@ -54,10 +55,9 @@ string scramble (vector <string> capture){  //Generate randomly shuffled string
 }
 
 int main() {
-    srand(time(0));
-    vector <string> tokens;
-    string usr_input;
-    string guess_word;
+    vector <string> tokens, guess;
+    string usr_input, input,  guess_word;
+    int num_animals;
 
     cout << "Enter at least five animal names, e.g., cat, dog, etc..." << endl;
     while (true) {
@@ -70,15 +70,27 @@ int main() {
         getline(cin, usr_input); //Get user input
         vector<string> tok = pushtoken(usr_input); //Assign returned user input to local vector
         tokens.insert(tokens.end(), tok.begin(), tok.end());  //Push returned user input onto stack
-        guess_word = scramble(tokens);
+        guess_word = scramble(tokens, num_animals);
         if (usr_input == "") break;  // QUIT
-    
+
     }
 
     print_animals(tokens);
     cout << endl;
     assert (tokens.size() >= 5);  //Assert vector is at least five elements
-    cout << "What are 2 animals in \"" << guess_word << "\" ? " << endl;
+    cout << "What are 2 animals in \"" << guess_word << "\" ? ";
+    
+    for (int i = 0; i < num_animals; ++i) {
+        getline(cin, input);
+        if (input == "Quit") return 0;
+        if (input == "?") print_animals(tokens);
+        guess.push_back(input);
+    }
+
+   /* for (int i = 0; i < tokens.size(); ++i) {
+        cout << tokens[i];
+
+    }*/
 }
 
 
