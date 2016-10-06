@@ -71,7 +71,7 @@ int main() {
         vector<string> tok = pushtoken(usr_input); //Assign returned user input to local vector
         tokens.insert(tokens.end(), tok.begin(), tok.end());  //Push returned user input onto stack
         guess_word = scramble(tokens, num_animals);
-        if (usr_input == "") break;  // QUIT
+        if (usr_input == "") break;  //Register usr_input
 
     }
 
@@ -80,13 +80,17 @@ int main() {
     assert (tokens.size() >= 5);  //Assert vector is at least five elements
     cout << "What are 2 animals in \"" << guess_word << "\" ? ";
     
-    for (int i = 0; i < num_animals; ++i) {
+    for (int i = 0; i < num_animals; ++i) {  //Promp player for response to guess_word
         getline(cin, input);
-        if (input == "Quit") return 0;
+        if (input == "Quit") return 0;  //QUIT game
         if (input == "?") print_animals(tokens);
-        guess.push_back(input);
+        guess.push_back(input);  //Push guess_word response onto guess stack
     }
 
+    for (int i = 0; i < guess.size(); ++i) {
+        cout <<  guess[i];
+    }
+    
    /* for (int i = 0; i < tokens.size(); ++i) {
         cout << tokens[i];
 
