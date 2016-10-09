@@ -2,10 +2,15 @@
 //Assignment 3: Animal Quz
 
 #include <iostream>
+#include <unordered_set>
 #include <vector>
 #include <algorithm>
 #include <numeric>
 #include <cassert>
+#include <set>
+#include <unordered_set>
+#include <random>
+#include <chrono>
 using namespace std;
 
 
@@ -28,49 +33,40 @@ vector<string> pushtoken (string l) {  //Fucntion pushes user input to vector st
     return tok;
 }
 
-// void game_init () {
-//   shuffle(tokens.begin(),tokens.end());
-//   int num_animals = uniform_int_distribution <int> (1,3) rand();
-//   for (int i = 0; i < num_animals; i++) choice.push_back(i);
-//   shuffle(choice.begin(),choice.end());
-//
-// }
-
-void print_animals(vector <string> animals) {
+void print_animals(vector<string> animals) {  //Print list of animals names chosen by user
     for (int i = 0; i < animals.size(); ++i) {
         cout << i + 1 << ": " << animals[i] << endl;
     }
 }
 
-string scramble (vector <string> capture,int& num_animals){  //Generate randomly shuffled string
-    srand(time(0));
+
+string scramble (vector<string> capture, vector<string>& challenge_words, int& num_animals){  //Generate randomly shuffled string
     string challenge;
-    vector <string> challenges;
-    random_shuffle(capture.begin(), capture.end());
-    num_animals = rand() % 3 + 1;  // num_animals in the range 1 to 3
-    for (int i = 0; i < num_animals; i++) challenges.push_back(capture[i]);
-    for_each(challenges.begin(), challenges.end(), [&](string &piece){ challenge += piece; });  //Construct string from vector
+    set<string> cw;
+    default_random_engine generator ((unsigned int)time(0));  //Construct random generator engine
+    uniform_int_distribution<int> distribution(1,3);  //num_animals in the range 1 to 3
+    num_animals = distribution(generator);  //Assign num_animals with random int in range of 1 to 3
+    random_shuffle(capture.begin(), capture.end());  //Shuffle list of animals chosen by user
+    for (int i = 0; i < num_animals; ++i) cw.insert(capture[i]);
+    challenge_words.assign(cw.begin(), cw.end());
+    for_each(challenge_words.begin(), challenge_words.end(), [&](string &piece){ challenge += piece; });  //Construct string from vector
     random_shuffle(challenge.begin(), challenge.end());  //Scramble string
+    cout << num_animals;
     return challenge;
 }
 
 int main() {
-    vector <string> tokens, guess;
-    string usr_input, input,  guess_word;
+    vector<string> tokens, challenge_words, guess_words;
+    string usr_input, input, guess_word;
     int num_animals;
 
-    cout << "Enter at least five animal names, e.g., cat, dog, etc..." << endl;
+    cout << "Enter at least five animal names, e.g., cat, dog, etc..." << endl;  //Promt user for to input 5 animals
     while (true) {
-        // if (usr_input == "?") {
-        //     print_animals(tokens);
-        //     usr_input = "";
-        //     continue;
-        // }
         cout << "> ";
         getline(cin, usr_input); //Get user input
         vector<string> tok = pushtoken(usr_input); //Assign returned user input to local vector
         tokens.insert(tokens.end(), tok.begin(), tok.end());  //Push returned user input onto stack
-        guess_word = scramble(tokens, num_animals);
+        guess_word = scramble(tokens, challenge_words, num_animals);
         if (usr_input == "") break;  //Register usr_input
 
     }
@@ -78,23 +74,44 @@ int main() {
     print_animals(tokens);
     cout << endl;
     assert (tokens.size() >= 5);  //Assert vector is at least five elements
-    cout << "What are 2 animals in \"" << guess_word << "\" ? ";
-    
-    for (int i = 0; i < num_animals; ++i) {  //Promp player for response to guess_word
+
+    while(true) {
+        cout << "What are " << num_animals << " animals in \"" << guess_word << "\" ? ";  //Promt user to guess animals in guess_word
         getline(cin, input);
-        if (input == "Quit") return 0;  //QUIT game
-        if (input == "?") print_animals(tokens);
-        guess.push_back(input);  //Push guess_word response onto guess stack
+        if (input == "Quit") {
+            cout << "Bye..";
+            return 0;  //QUIT game
+        }
+        else if (input == "?") {  //Print list of animal names chosen by user
+            print_animals(tokens);
+            continue;
+        }
+        else {
+            guess_words = pushtoken(input);  //Push guess_word response onto guess stack
+            break;
+
+        }
+
     }
 
-    for (int i = 0; i < guess.size(); ++i) {
-        cout <<  guess[i];
-    }
-    
-   /* for (int i = 0; i < tokens.size(); ++i) {
-        cout << tokens[i];
+    unordered_set<string> set_guess_words(guess_words.begin(), guess_words.end());  //Convert guess_words vector to set
+    unordered_set<string> set_challenge_words(challenge_words.begin(), challenge_words.end());  //Convert challange_words vector to set
 
-    }*/
+    //TEST
+    cout << "words we challenged the user with" << endl;
+    for (int i = 0; i < challenge_words.size(); ++i) {
+        cout << challenge_words[i] << endl;
+    }
+    cout << endl;
+    cout << "words the user guessed" << endl;
+    for (int i = 0; i < guess_words.size(); ++i) {
+        cout << guess_words[i] << endl;
+    }
+    cout << endl;
+    if (set_guess_words == set_challenge_words) cout << "YOU ARE RIGHT" << endl;
+    if (set_guess_words != set_challenge_words) cout << "YOU ARE WRONG" << endl;
+
+
 }
 
 
