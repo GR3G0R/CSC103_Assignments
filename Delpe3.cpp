@@ -121,8 +121,14 @@ int main() {
             print_animals(tokens);
             continue;
         }
-        else {
+        else if (guess_words.size() < challenge_words.size()){  //Promt user for additional input
+            cout << "Your number of input is incorrect. Enter again: ";
+            getline(cin, input);
             guess_words = pushtoken(input);  //Push guess_word response onto guess stack
+        }
+        else {
+            guess_words = pushtoken(input); 
+        }
             /*for (int i = 0; i < input.size(); ++i) {
                 while(input[i] == ' ' || input[i] != EOF){
                     count++;
@@ -130,9 +136,7 @@ int main() {
                 }
             }
             while (count < num_animals - 1) {
-                cout << "Your number of input is incorrect. Enter again: ";
-                getline(cin, input);
-                guess_words.clear();
+                                guess_words.clear();
                 guess_words = pushtoken(input);
                 cout << endl;
                 for (int i = 0; i < input.size(); ++i) {
@@ -150,10 +154,9 @@ int main() {
                 return 0;
             }
             else if (input == "?") {
-                print_animals(tokens);i*/
-            }
+                print_animals(tokens);i
+            }*/
 
-        cout << guess_word.length();
         unordered_set<string> set_guess_words(guess_words.begin(), guess_words.end());  //Convert guess_words vector to set
         unordered_set<string> set_challenge_words(challenge_words.begin(), challenge_words.end());  //Convert challange_words vector to set
 
