@@ -29,7 +29,7 @@ vector<string> pushtoken (string l) {  //Fucntion pushes user input to vector st
         token = "";
         found = false;
     }
-    if (found) tok.push_back(token);      //If word detected -> pushed onto stack
+    if (found) tok.push_back(token);  //If word detected -> pushed onto stack
     return tok;
 }
 
@@ -55,28 +55,28 @@ string scramble (vector<string> capture, vector<string>& challenge_words, int& n
     return challenge;
 }
 
-int strikes (int tally) {
+int strikes (int tally) {  //Determine strike event
     return tally / 2;
 }
 
-void success(int& successes, int& fails, int& scount) {
+void success(int& successes, int& fails, int& scount) {  //Track successful guesses
     fails = 0;
     successes += 1;
     scount += 1;
+    cout << "Yes!\n" << endl;
     if (successes % 2 == 0) {
         cout << "Succeeded two consecutive times, challenge goes up!\n"<< endl;
     }
-    else cout << "Yes!\n" << endl;
 }
 
-void fail(int& successes, int& fails,int& scount) {
+void fail(int& successes, int& fails,int& scount) {  //Track unseccessful guesses
     successes = 0;
     fails += 1;
     scount -= 1;
+    cout << "Nope!\n"  << endl;
     if (fails % 2 == 0) {
         cout << "Missed two consecutive times, challenge goes down!\n" << endl;
     }
-    else cout << "Nope!\n"  << endl;
 }
 
 int main() {
@@ -103,7 +103,7 @@ int main() {
 
         for (int i = 0; i < strikes(scount); ++i) {  //Regulate strikes
             while(true) {
-                int index = rand() % strikes(scount);
+                int index = rand() % guess_word.length();
                 if (guess_word[index] == '_') continue;
                 guess_word[index] = '_';
                 break;
@@ -112,6 +112,7 @@ int main() {
 
         cout << "What are " << num_animals << " animals in \"" << guess_word << "\" ? ";  //Promt user to guess animals in guess_word
         getline(cin, input);
+        //guess_words = pushtoken(input);  //Push guess_word response onto guess stack
 
         if (input == "Quit") {
             cout << "Bye..";
@@ -121,63 +122,24 @@ int main() {
             print_animals(tokens);
             continue;
         }
-        else if (guess_words.size() < challenge_words.size()){  //Promt user for additional input
+        else {
+            guess_words = pushtoken(input);
+        }
+
+        if (guess_words.size() < challenge_words.size()) {  //Promt user for additional input
             cout << "Your number of input is incorrect. Enter again: ";
+            guess_words.clear();
             getline(cin, input);
             guess_words = pushtoken(input);  //Push guess_word response onto guess stack
         }
-        else {
-            guess_words = pushtoken(input); 
-        }
-            /*for (int i = 0; i < input.size(); ++i) {
-                while(input[i] == ' ' || input[i] != EOF){
-                    count++;
-                    break;
-                }
-            }
-            while (count < num_animals - 1) {
-                                guess_words.clear();
-                guess_words = pushtoken(input);
-                cout << endl;
-                for (int i = 0; i < input.size(); ++i) {
-                    while(input[i] == ' ' && input[i] != EOF){
-                        count++;
-                        break;
-                    }
-                }
-                    if (count == num_animals) {
-                        continue;
-                    }
-            }
-            if (input == "Quit") {
-                cout << "Bye...";
-                return 0;
-            }
-            else if (input == "?") {
-                print_animals(tokens);i
-            }*/
 
         unordered_set<string> set_guess_words(guess_words.begin(), guess_words.end());  //Convert guess_words vector to set
         unordered_set<string> set_challenge_words(challenge_words.begin(), challenge_words.end());  //Convert challange_words vector to set
 
-        //TEST
-        cout << "words we challenged the user with" << endl;
-        for (int i = 0; i < challenge_words.size(); ++i) {
-            cout << challenge_words[i] << endl;
-        }
-        cout << endl;
-        cout << "words the user guessed" << endl;
-        for (int i = 0; i < guess_words.size(); ++i) {
-            cout << guess_words[i] << endl;
-        }
-        cout << endl;
-
         if (set_guess_words == set_challenge_words) { //Set comparator determines if guess == scrambled word
-            //cout << "YOU ARE RIGHT" << endl;
             success(successes, fails, scount);
         }
         if (set_guess_words != set_challenge_words) {
-            //cout << "YOU ARE WRONG" << endl;
             fail(successes, fails, scount);
         }
     }
