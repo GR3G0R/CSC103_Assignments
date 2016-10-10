@@ -114,7 +114,7 @@ int main() {
         getline(cin, input);
         //guess_words = pushtoken(input);  //Push guess_word response onto guess stack
 
-        if (input == "Quit") {
+        if (input == "quit") {
             cout << "Bye..";
             return 0;  //QUIT game
         }
@@ -130,6 +130,14 @@ int main() {
             cout << "Your number of input is incorrect. Enter again: ";
             guess_words.clear();
             getline(cin, input);
+            if (input == "quit") {
+                cout << "Bye..";
+                return 0;  //QUIT game
+            }
+            else if (input == "?") {  //Print list of animal names chosen by user
+                print_animals(tokens);
+                continue;
+            }
             guess_words = pushtoken(input);  //Push guess_word response onto guess stack
         }
 
