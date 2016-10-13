@@ -62,7 +62,10 @@ int strikes (int tally) {  //Determine strike event
 void success(int& successes, int& fails, int& scount) {  //Track successful guesses
     fails = 0;
     successes += 1;
-    scount += 1;
+    if (successes >= 2) {
+        scount += 1;
+        successes = 0;
+        }
     cout << "Yes!\n" << endl;
     if (successes % 2 == 0) {
         cout << "Succeeded two consecutive times, challenge goes up!\n"<< endl;
@@ -72,7 +75,11 @@ void success(int& successes, int& fails, int& scount) {  //Track successful gues
 void fail(int& successes, int& fails,int& scount) {  //Track unseccessful guesses
     successes = 0;
     fails += 1;
-    scount -= 1;
+    if (fails >= 2) {
+        scount -= 1;
+        fails = 0;
+        }
+    if (scount < 0) scount = 0;
     cout << "Nope!\n"  << endl;
     if (fails % 2 == 0) {
         cout << "Missed two consecutive times, challenge goes down!\n" << endl;
@@ -82,7 +89,7 @@ void fail(int& successes, int& fails,int& scount) {  //Track unseccessful guesse
 int main() {
     vector<string> tokens, challenge_words, guess_words;
     string usr_input, input, guess_word;
-    int num_animals, successes, fails, scount = 0, count = 0;
+    int num_animals, successes = 0, fails = 0, scount = 0;
 
     cout << "Enter at least five animal names, e.g., cat, dog, etc..." << endl;  //Promt user for to input 5 animals
     while (true) {
@@ -101,13 +108,13 @@ int main() {
     while(true) {
         guess_word = scramble(tokens, challenge_words, num_animals);  //Assign scrambled word to local string guess_word
 
-        for (int i = 0; i < strikes(scount); ++i) {  //Regulate strikes
+        for (int i = 0; i < scount; ++i) {  //Regulate strikes
             while(true) {
                 int index = rand() % guess_word.length();
                 if (guess_word[index] == '_') continue;
-                guess_word[index] = '_';
-                break;
-            }
+                    guess_word[index] = '_';
+                    break;
+                }
         }
 
         cout << "What are " << num_animals << " animals in \"" << guess_word << "\" ? ";  //Promt user to guess animals in guess_word
@@ -146,9 +153,15 @@ int main() {
 
         if (set_guess_words == set_challenge_words) { //Set comparator determines if guess == scrambled word
             success(successes, fails, scount);
+            cout << "c:" << scount;
+            cout << "s:" << successes;
+            cout << "f:" << fails;
         }
         if (set_guess_words != set_challenge_words) {
             fail(successes, fails, scount);
+            cout << "c:" << scount;
+            cout << "s:" << successes;
+            cout << "f:" << fails;
         }
     }
 }
