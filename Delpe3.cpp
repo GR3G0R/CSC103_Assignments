@@ -55,10 +55,6 @@ string scramble (vector<string> capture, vector<string>& challenge_words, int& n
     return challenge;
 }
 
-int strikes (int tally) {  //Determine strike event
-    return tally / 2;
-}
-
 void success(int& successes, int& fails, int& scount) {  //Track successful guesses
     fails = 0;
     successes += 1;
@@ -153,15 +149,9 @@ int main() {
 
         if (set_guess_words == set_challenge_words) { //Set comparator determines if guess == scrambled word
             success(successes, fails, scount);
-            cout << "c:" << scount;
-            cout << "s:" << successes;
-            cout << "f:" << fails;
         }
         if (set_guess_words != set_challenge_words) {
             fail(successes, fails, scount);
-            cout << "c:" << scount;
-            cout << "s:" << successes;
-            cout << "f:" << fails;
         }
     }
 }
