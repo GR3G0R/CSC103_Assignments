@@ -34,7 +34,12 @@ public:
     Player(const string& n) : m_name(n) {m_deck.reserve(5); } //Player constructor
     void push_back(const Card& c) {m_deck.push_back(c); }
     friend ostream& operator<<(ostream&, const Player& p);
-    Card get_card(int index) { return m_deck[index]; }
+    // Card get_card(int index) { return m_deck[index]; }
+    Card pass_card(int index) {
+        Card result = m_deck[index];
+        m_deck.erase(m_deck.begin() + index);
+        return result;
+    }
 };
 // ostream& operator<<(ostream& o, const Player& p) {  //Extraction operator overloaded to print player name and hand
 //     o << "Player: " << p.m_name << " has ";
@@ -94,7 +99,8 @@ int main() {
     cin >> user_input;
     vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
     int index = find(letters.begin(), letters.end(), user_input) - letters.begin();
-    cout << players[0].get_card(index) << endl;
+    cout << players[0].pass_card(index) << endl;
+    print_players(players);
 
     return 0;
 }
