@@ -31,6 +31,8 @@ class Player {  //Introduce Player class
     string m_name;
     vector <Card> m_deck;
 public:
+    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+
     Player(const string& n) : m_name(n) {m_deck.reserve(5); } //Player constructor
     void push_back(const Card& c) {m_deck.push_back(c); }
     friend ostream& operator<<(ostream&, const Player& p);
@@ -49,10 +51,9 @@ public:
 //     return o;
 // }
 ostream& operator<<(ostream& o, const Player& p) {  //Extraction operator overloaded to print player name and hand
-    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
     o << p.m_name << " ";
     for (int i = 0, len = p.m_deck.size(); i < len; ++i) {
-        o << "(" << letters[i] << ") " << p.m_deck[i] << " ";
+        o << "(" << p.letters[i] << ") " << p.m_deck[i] << " ";
     }
     return o;
 }
@@ -78,7 +79,6 @@ int main() {
     for (int i = 1; i <= 13; ++i) deck.push_back(Card('H',i));  //push_back clubs suit
     random_shuffle(deck.begin(),deck.end());  //Shuffle deck
 
-
     players.push_back(Player("Player1"));  //push_back players
     players.push_back(Player("Player2"));
     players.push_back(Player("Player3"));
@@ -95,11 +95,10 @@ int main() {
     }
 
     print_players(players);
-    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     for (int i = 0, len = players.size(); i < len; ++i) {
         cout << "Which one to replace? ";
         cin >> user_input;
-        int index = find(letters.begin(), letters.end(), user_input) - letters.begin();
+        int index = find(players[i].letters.begin(), players[i].letters.end(), user_input) - players[i].letters.begin();
         Card passed_card = players[i].pass_card(index);
         players[(i+1) % players.size()].push_back(passed_card);
         print_players(players);
