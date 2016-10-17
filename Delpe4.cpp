@@ -35,46 +35,62 @@ public:
     void push_back(const Card& c) {m_deck.push_back(c); }
     friend ostream& operator<<(ostream&, const Player& p);
 };
+// ostream& operator<<(ostream& o, const Player& p) {  //Extraction operator overloaded to print player name and hand
+//     o << "Player: " << p.m_name << " has ";
+//     for (int i = 0, len = p.m_deck.size(); i < len; ++i) {
+//         o << p.m_deck[i] << " ";
+//     }
+//     return o;
+// }
 ostream& operator<<(ostream& o, const Player& p) {  //Extraction operator overloaded to print player name and hand
-    o << "Player: " << p.m_name << " has ";
+    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+    o << p.m_name << " ";
     for (int i = 0, len = p.m_deck.size(); i < len; ++i) {
-        o << p.m_deck[i] << " ";
+        o << "(" << letters[i] << ") " << p.m_deck[i] << " ";
     }
     return o;
 }
 
+// void print_players(vector<Player>& players) {  //Print each payer and thier hand
+// for (int i = 0, len = players.size(); i < len; ++i)
+//     cout << players[i] << endl;
+// }
 void print_players(vector<Player>& players) {  //Print each payer and thier hand
-for (int i = 0, len = players.size(); i < len; ++i)
-    cout << players[i] << endl;
+    for (int i = 0, len = players.size(); i < len; ++i)
+        cout << players[i] << endl;
+    cout << endl;
 }
 
 int main() {
-vector<Player> players;
+    vector<Player> players;
+    char user_input;
 
-vector<Card> deck; deck.reserve(52);  //Declare vector deck
-for (int i = 1; i <= 13; ++i) deck.push_back(Card('S',i));  //push_back spades suit
-for (int i = 1; i <= 13; ++i) deck.push_back(Card('C',i));  //push_back clubs suit
-for (int i = 1; i <= 13; ++i) deck.push_back(Card('D',i));  //push_back diamonds suit
-for (int i = 1; i <= 13; ++i) deck.push_back(Card('H',i));  //push_back clubs suit
-random_shuffle(deck.begin(),deck.end());  //Shuffle deck
-
-
-players.push_back(Player("Player1"));  //push_back players
-players.push_back(Player("Player2"));
-players.push_back(Player("Player3"));
-players.push_back(Player("Player4"));
-players.push_back(Player("Player5"));
+    vector<Card> deck; deck.reserve(52);  //Declare vector deck
+    for (int i = 1; i <= 13; ++i) deck.push_back(Card('S',i));  //push_back spades suit
+    for (int i = 1; i <= 13; ++i) deck.push_back(Card('C',i));  //push_back clubs suit
+    for (int i = 1; i <= 13; ++i) deck.push_back(Card('D',i));  //push_back diamonds suit
+    for (int i = 1; i <= 13; ++i) deck.push_back(Card('H',i));  //push_back clubs suit
+    random_shuffle(deck.begin(),deck.end());  //Shuffle deck
 
 
-for (int i = 0, len = players.size(); i < len; ++i) {
-    for (int j = 0; j < 7; ++j) {
-        Card c = deck.back();
-        players[i].push_back(c);
-        deck.pop_back();
+    players.push_back(Player("Player1"));  //push_back players
+    players.push_back(Player("Player2"));
+    players.push_back(Player("Player3"));
+    players.push_back(Player("Player4"));
+    players.push_back(Player("Player5"));
+
+
+    for (int i = 0, len = players.size(); i < len; ++i) {
+        for (int j = 0; j < 7; ++j) {
+            Card c = deck.back();
+            players[i].push_back(c);
+            deck.pop_back();
+        }
     }
-}
 
-print_players(players);
+    print_players(players);
+    cout << "Which one to replace? ";
+    cin >> user_input;
 
-return 0;
+    return 0;
 }
