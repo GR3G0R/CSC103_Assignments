@@ -95,12 +95,15 @@ int main() {
     }
 
     print_players(players);
-    cout << "Which one to replace? ";
-    cin >> user_input;
-    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
-    int index = find(letters.begin(), letters.end(), user_input) - letters.begin();
-    cout << players[0].pass_card(index) << endl;
-    print_players(players);
+    vector <char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    for (int i = 0, len = players.size(); i < len; ++i) {
+        cout << "Which one to replace? ";
+        cin >> user_input;
+        int index = find(letters.begin(), letters.end(), user_input) - letters.begin();
+        Card passed_card = players[i].pass_card(index);
+        players[(i+1) % players.size()].push_back(passed_card);
+        print_players(players);
+    }
 
     return 0;
 }
