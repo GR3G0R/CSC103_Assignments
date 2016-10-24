@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 #include <random>
 #include <chrono>
 #include <iomanip>
@@ -61,7 +62,7 @@ class Player: public Card {  //Introduce Player class
     string m_name;
     vector<Card> m_deck;
 public:
-    vector<char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};  //Vector of deck elements
+    vector<char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};  //Vector of deck elements
 
     Player(const string& n) : m_name(n) {m_deck.reserve(5); } //Player constructor
     void push_back(const Card& c) { m_deck.push_back(c); }  //Define member function push_back - push cards onto player deck
@@ -202,6 +203,7 @@ int main() {
     vector<Card> playerHand, playerHand1, playerHand2, playerHand3, playerHand4, suitCount, pCards;
     vector<bool> shipStatus;
     vector<Card> test = {'a','a','a','a'};  //Test variable
+    vector<char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};  //Vector of deck elements
 
     for (int i = 0, len = suitCount.size(); i < len; ++i) { suitCount[i] = 0; }
 
@@ -240,6 +242,7 @@ int main() {
 
             cout << "Which one to replace? ";  //Promt user to pass unwanted card
             cin >> user_input;  //Get user input
+            assert(find(letters.begin(), letters.end(), user_input) != letters.end());
             cout << endl << endl;
 
             if (user_input == '?') {  //Hint - reveals all passed cards
