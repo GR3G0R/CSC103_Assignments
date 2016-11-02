@@ -242,7 +242,7 @@ int main() {
 
             cout << "Which one to replace? ";  //Promt user to pass unwanted card
             cin >> user_input;  //Get user input
-            assert(find(validInput.begin(), validInput.end(), user_input) != validInput.end());
+            assert(find(validInput.begin(), validInput.end(), user_input) != validInput.end());  //Test is user input within range of allowable parameters
             cout << endl << endl;
 
             if (user_input == '?') {  //Hint - reveals all passed cards
