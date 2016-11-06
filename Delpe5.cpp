@@ -8,17 +8,6 @@
 
 using namespace std;
 
-/*class Cell {
-    bool m_accu;
-    bool m_mark;
-public:
-    Cell() : m_accu(false), m_mark(false) {}
-    friend ostream& operator<<(ostream& o, const Cell& c) {
-    if (!c.m_accu) return o << setw(2) << '.';
-    return o << setw(2) << (c.m_mark? 'o' : 'x');
-    }
-};*/
-
 class SudokuField {
     vector<vector<char> > m_map;
     vector<int> m_list;
@@ -36,16 +25,7 @@ public:
         vector<char> temp7 = {'4','5','6','1','2','3','7','8','9'}; m_map.push_back(temp7);
         vector<char> temp8 = {'7','8','9','4','5','6','1','2','3'}; m_map.push_back(temp8);
 
-        //vector<Cell> a_row(9);
-        //for (int i = 0; i < 9; ++i) m_map.push_back(a_row);
-    }
-    /*void Verify() {
-        for (int j = 0; j < 9; ++j) {
-            for(int i = 0, len = m_map[i].GetSize(); i < len; ++i) {
-                if (m_map[i][j]==m_map[i][j+1]) { return false; }
-            }
         }
-    }*/
 
     int GetSize() { return m_map.size(); }
     void operator=(const SudokuField& l) { m_map = l.m_map; }
@@ -65,8 +45,42 @@ public:
                 o << endl;
             }
         return o;
+    }
+};
+
+
+void SubVerify (SudokuField board) {
+    char temp;
+    int count;
+    bool subValid;
+
+    for (int i = 0; i < 9; ++i) {
+        subValid = false;
+        for (int j = 0; j < 3; ++j) {
+            for (int k = 0; k < 3; ++k) {
+                temp = board[ j + (i / 3) * 3 ][ k + (i % 3) * 3 ];
+                //cout << "\nTemp = board[" << j + (i / 3) * 3 <<  "][" << k + (i % 3) * 3 << "] with value: " << temp << endl;
+                count = 0;
+                for (int m = 0; m < 3; ++m) {
+                    for (int n = 0; n < 3; ++n) {
+                        //cout << "\tComparing board[" << m + (i / 3) * 3 << "][" << n + (i % 3) * 3 << "]\n";
+                        //cout << "\t\twith value: " << board[ n + (i / 3) * 3 ][ m + (i % 3) * 3 ] << endl;
+                        if (board[ m + (i / 3) * 3 ][ n + (i % 3) * 3 ] == temp) count++;
+                    }
+                    if(subValid) break;
+                }
+                if(subValid) break;
+            }
+            if(subValid) continue;
         }
-    };
+        if (count > 1) {
+            cout << "Subsquare " << i << " is invalid. " << endl;
+            subValid = true; break;
+        }
+    }
+    if(count <= 1) cout << "- All columns, rows, and componenets are OK..." << endl;
+}
+
 
 int main() {
     string command;
@@ -82,7 +96,7 @@ int main() {
         cin >> command;
         //cout << endl;
         if (command == "show") {
-            cout << s_board ;
+            cout << s_board << endl;
         }
         if (command == "quit") {
             cout << "Bye...";
@@ -93,9 +107,8 @@ int main() {
            int c_index = rand() % s_board.GetSize();
            s_board[r_index][c_index] = '_';
            cout << "Erasing row " << s_board.GetRow(r_index) << " column " << s_board.GetColumn(c_index) << endl;
-           cout << s_board[0][1];
         }
-        if(command == "swap") {
+        if (command == "swap") {
             int r1 = rand() % 9;
             int r2 = rand() % 9;
             int RowCol = rand();
@@ -112,6 +125,9 @@ int main() {
                 }
                 cout << "- Columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << " were swapped..." << endl;
             }
+        }
+        if (command == "verify") {
+             SubVerify(s_board);
         }
     }
     //}
