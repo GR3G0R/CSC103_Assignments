@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <iomanip>
 #include <chrono>
 
@@ -73,18 +74,14 @@ void SubVerify (SudokuField board) {  //Verify 3X3 submatrices
                         << " and column " << board.GetColumn((i % 3) * 3) << endl;
                     break;
                 }
-                //cout << "\nTemp = board[" << j + (i / 3) * 3 <<  "][" << k + (i % 3) * 3 << "] with value: " << temp << endl;
+                //count = 0;
                 for (int m = 0; m < 3; ++m) {
                     for (int n = 0; n < 3; ++n) {
-                        //cout << "\tComparing board[" << m + (i / 3) * 3 << "][" << n + (i % 3) * 3 << "]\n";
-                        //cout << "\t\twith value: " << board[ n + (i / 3) * 3 ][ m + (i % 3) * 3 ] << endl;
-                        /*if (board[ m + (i / 3) * 3 ][ n + (i % 3) * 3 ] == temp) {
-                            count++;
-                            if (count > 1) {
-                                cout << "Found inconsistency in row " <<  board.GetRow(m + (i / 3) * 3) << endl;
-                                cout << "Found inconsistency in column " << board.GetColumn(n + (i % 3) *3) << endl;
-                                break;
-                            }
+                        //if (board[ m + (i / 3) * 3 ][ n + (i % 3) * 3 ] == temp) count++;
+                        /*if (count > 1) {
+                            cout << "Found inconsistency in componenet starting at row " << board.GetRow((i / 3) * 3)
+                                << " and column " << board.GetColumn((i % 3) * 3) << endl;
+                            subValid = true; break;
                         }*/
                     }
                     if(subValid) break;
@@ -97,29 +94,32 @@ void SubVerify (SudokuField board) {  //Verify 3X3 submatrices
     if(count <= 0) cout << "- All columns, rows, and componenets are OK..." << endl;
 }
 
-void ColumnVerify(SudokuField board, int i) {
+void ColumnVerify(SudokuField board, int i) {  //Verify column inconsistency
     vector<char> column;
-    //for (int i = 0; i < 9; ++i) {
-        column = board.PrintColumn(i);
-        for (int j = 0; j < 9; ++j) {
-            if (column[j] == '_') {
+    column = board.PrintColumn(i);  //Call member function to assign returned sudoku board column to column variable
+    for (int j = 0; j < 9; ++j) {
+        if (column[j] == '_') {
+            cout << "Found inconsistency in column " << board.GetColumn(i) << endl;
+        }
+    }
+    for (int n = 0; n < 9; ++n) {
+        for (int k = 0; k < 9; ++k) {
+            if (n != k && column[n] == column[k]) {
                 cout << "Found inconsistency in column " << board.GetColumn(i) << endl;
             }
         }
-    //}
+    }
 }
 
-void RowVerify(SudokuField board) {
+void RowVerify(SudokuField board) {  //Verify row inconsistency
     char temp;
     int counter;
     for (int i = 0; i < 9; ++i) {
         for (int j = 0; j < 9; ++j) {
             counter = 0;
             temp = board[i][j];
-            //for (int k = 0; k < 9; ++k) {
-                if (board[i][j] == '_') {
-                    counter++;
-                //}
+            if (board[i][j] == '_') {
+                counter++;
             }
             if (counter > 0) {
                 cout << "Found inconsistency in row " << board.GetRow(i) << endl;
@@ -129,7 +129,7 @@ void RowVerify(SudokuField board) {
     }
 }
 
-vector<int> SwapIndex() {
+vector<int> SwapIndex() {  //Regulate swap index range
     vector<int> subColumn = {0,3,6};
     vector<int> swapColumn = {1,2};
     int rightIndex = subColumn[rand() % 3];
@@ -167,42 +167,99 @@ int main() {
            cout << "Erasing row " << s_board.GetRow(r_index) << " column " << s_board.GetColumn(c_index) << endl;  //Reveal modification
         }
         if (command == "swap") {  //Command swap interchanges random rows/colums
-            //int r1 = rand() % 9;  //Random row index
-            //int r2 = rand() % 9;  //Random column index
-            vector<int> index = SwapIndex();
-            int r1 = index[0];
-            int r2 = index[1];
+            int r1 = rand() % 9;  //Random row index
+            int r2 = rand() % 9;  //Random column index
+            //vector<int> index = SwapIndex();
+            //int r1 = index[0];
+            //int r2 = index[1];
             int RowCol = rand();
-            //cout << index[0] << endl;
-            //cout << index[1] << endl;
-            // lefts = vector { 1, 2, 3 };
-            // left = lefts.sample;
-            // rights = vector { 1, 2, 3 };
-            // right = rights.sample;
-            // projectors = vector { 0, 3, 6 };
-            // projector = projectors.sample;
-            // left += projector;
-            // right += projector;
             if (RowCol % 2  == 0) {
-                swap(s_board[r1],s_board[r2]);  //Swap method interchanges rows
-                cout << "- Rows " << s_board.GetRow(r1) << " and " << s_board.GetRow(r2) << " were swapped..." << endl;
-            } else {
-                for (int i = 0; i < 9; ++i) {  //Column swaping for loop
-                double temp;
-                temp = s_board[i][r2];
-                s_board[i][r2] = s_board[i][r1];
-                s_board[i][r1] = temp;
+                if((r1 >= 0 && r1 <= 2) && (r2 >= 0 && r2 <= 2)) {  //Verify swap range
+                    swap(s_board[r1],s_board[r2]);  //Swap method interchanges rows
+                    cout << "- Rows " << s_board.GetRow(r1) << " and " << s_board.GetRow(r2) << " were swapped..." << endl;
                 }
-                cout << "- Columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << " were swapped..." << endl;
+                if((r1 >= 3 && r1 <= 5) && (r2 >= 3 && r2 <= 5)) {  //Verify swap range
+                    swap(s_board[r1],s_board[r2]);  //Swap method interchanges rows
+                    cout << "- Rows " << s_board.GetRow(r1) << " and " << s_board.GetRow(r2) << " were swapped..." << endl;
+                }
+                if((r1 >= 6 && r1 <= 8) && (r2 >= 6 && r2 <= 8)) {  //Verify swap range
+                    swap(s_board[r1],s_board[r2]);  //Swap method interchanges rows
+                    cout << "- Rows " << s_board.GetRow(r1) << " and " << s_board.GetRow(r2) << " were swapped..." << endl;
+                }
+                else {  //Swap row components
+                    cout << "Trying to swap rows " << s_board.GetRow(r1) << " and " << s_board.GetRow(r2) << endl;
+                    swap(s_board[(r1 / 3) * 3],s_board[(r2 / 3) * 3]);
+                    swap(s_board[((r1 / 3) * 3) + 1],s_board[((r2 / 3) * 3) + 1]);
+                    swap(s_board[((r1 / 3) * 3) + 2],s_board[((r2 / 3) * 3) + 2]);
+                    cout << "- Rows " << s_board.GetRow((r1 / 3) * 3) << " and " << s_board.GetRow((r2 / 3) * 3) << " were swapped..." << endl;
+                    cout << "- Rows " << s_board.GetRow(((r1 / 3) * 3) + 1) << " and " << s_board.GetRow(((r2 / 3) * 3) + 1) << " were swapped..." << endl;
+                    cout << "- Rows " << s_board.GetRow(((r1 / 3) * 3) + 2) << " and " << s_board.GetRow(((r2 / 3) * 3) + 2) << " were swapped..." << endl;
+
+                }
+            }
+            else {
+                if((r1 >= 0 && r1 <= 2) && (r2 >= 0 && r2 <= 2)) {  //Verify column range
+                    for (int i = 0; i < 9; ++i) {  //Column swaping for loop
+                        double temp;
+                        temp = s_board[i][r2];
+                        s_board[i][r2] = s_board[i][r1];
+                        s_board[i][r1] = temp;
+                        cout << "- Columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << " were swapped..." << endl;
+                    }
+                }
+                if((r1 >= 3 && r1 <= 5) && (r2 >= 3 && r2 <= 5)) {  //Verify column range 
+                    for (int i = 0; i < 9; ++i) {  //Column swaping for loop
+                        double temp;
+                        temp = s_board[i][r2];
+                        s_board[i][r2] = s_board[i][r1];
+                        s_board[i][r1] = temp;
+                        cout << "- Columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << " were swapped..." << endl;
+                    }
+                }
+                if((r1 >= 6 && r1 <= 8) && (r2 >= 6 && r2 <= 8)) {  //Verify column range 
+                    for (int i = 0; i < 9; ++i) {  //Column swaping for loop
+                        double temp;
+                        temp = s_board[i][r2];
+                        s_board[i][r2] = s_board[i][r1];
+                        s_board[i][r1] = temp;
+                        cout << "- Columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << " were swapped..." << endl;
+                    }
+                }
+                else {  //Swap column range 
+                    cout << "Trying to swap columns " << s_board.GetColumn(r1) << " and " << s_board.GetColumn(r2) << endl;
+                    for (int i = 0; i < 9; ++i) {  //Column swaping for loop
+
+                    double temp;
+                    double temp1;
+                    double temp2;
+                    temp = s_board[i][(r2 / 3) * 3];
+                    s_board[i][(r2 / 3) * 3] = s_board[i][(r1 / 3) * 3];
+                    s_board[i][(r1 / 3) * 3] = temp;
+
+                    temp1 = s_board[i][((r2 / 3) * 3) + 1];
+                    s_board[i][((r2 / 3) * 3) + 1] = s_board[i][((r1 / 3) * 3) + 1];
+                    s_board[i][((r1 / 3) * 3) + 1] = temp1;
+
+                    temp2 = s_board[i][((r2 / 3) * 3) + 2];
+                    s_board[i][((r2 / 3) * 3) + 2] = s_board[i][((r1 / 3) * 3) + 2];
+                    s_board[i][((r1 / 3) * 3) + 2] = temp2;
+
+
+                    }
+
+                    cout << "- Columns " << s_board.GetColumn((r1 / 3) * 3) << " and " << s_board.GetColumn((r2 / 3) * 3) << " were swapped..." << endl;
+                    cout << "- Columns " << s_board.GetColumn(((r1 / 3) * 3) + 1) << " and " << s_board.GetColumn(((r2 / 3) * 3) + 1) << " were swapped..." << endl;
+                    cout << "- Columns " << s_board.GetColumn(((r1 / 3) * 3) + 2) << " and " << s_board.GetColumn(((r2 / 3) * 3) + 2) << " were swapped..." << endl;
+
+                }
             }
         }
         if (command == "verify") {  //Verify concistency with sudoku rules and print erroneous positions
-            RowVerify(s_board);
-            for (int i = 0; i < 9; ++i) {
+            RowVerify(s_board);  //Verify sudoku board rows
+            for (int i = 0; i < 9; ++i) {  //Verify sudoku board columns
                 ColumnVerify(s_board,i);
             }
-            SubVerify(s_board);
+            SubVerify(s_board);  //Verify sudoku board sum-components
         }
     }
-
 }
